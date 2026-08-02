@@ -1059,6 +1059,15 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
   }
 
+  function updateOverview(day) {
+    overviewItems.forEach(item =&gt; {
+      const selected = item.dataset.routeDay === day;
+      item.hidden = day !== &quot;all&quot; &amp;&amp; !selected;
+      if (selected) item.setAttribute(&quot;aria-current&quot;, &quot;true&quot;);
+      else item.removeAttribute(&quot;aria-current&quot;);
+    });
+  }
+
   function render(day) {
     const key = day === &quot;all&quot; ? &quot;all&quot; : day;
     image.setAttribute(&quot;href&quot;, basemaps[key]);
@@ -1066,11 +1075,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     path = d3.geoPath(projection);
     routeLayer.innerHTML = &quot;&quot;;
     markerLayer.innerHTML = &quot;&quot;;
-    overviewItems.forEach(item =&gt; {
-      if (day === &quot;all&quot;) item.removeAttribute(&quot;aria-current&quot;);
-      else if (item.dataset.routeDay === day) item.setAttribute(&quot;aria-current&quot;, &quot;true&quot;);
-      else item.removeAttribute(&quot;aria-current&quot;);
-    });
+    updateOverview(day);
     if (day === &quot;all&quot;) {
       for (const [routeDay, segments] of Object.entries(routes)) {
         const meta = dateMeta[routeDay];
